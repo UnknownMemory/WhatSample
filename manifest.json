@@ -12,8 +12,9 @@
             "run_at": "document_end",
             "matches": ["*://open.spotify.com/*"],
             "js": ["content-script.js"],
-            "all_frames": true
+            "css": ["css/spotifysampled.css"]
         }
     ],
+    "web_accessible_resources": ["icons/album-18dp.svg"],
     "manifest_version": 2
 }
