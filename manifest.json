@@ -15,6 +15,5 @@
             "css": ["css/spotifysampled.css"]
         }
     ],
-    "web_accessible_resources": ["icons/album-18dp.svg"],
     "manifest_version": 2
 }

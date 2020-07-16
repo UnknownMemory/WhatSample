@@ -1,3 +1,11 @@
-#sampled-track img {
+#sampled-track {
+    padding: 7px;
+}
+
+#sampled-track svg {
     display: block;
+}
+
+#sampled-track svg:hover {
+    fill: #fff;
 }
