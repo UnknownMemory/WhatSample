@@ -2,16 +2,17 @@
     "name": "Spotify Sampled",
     "version": "0.1",
     "description": "Get the sample used in a song on Spotify",
-    "permissions": ["storage"],
+    "permissions": ["tabs", "background", "storage"],
     "background": {
         "scripts": ["background.js"],
         "persistent": false
     },
     "content_scripts": [
         {
-          "matches": ["http://*.open.spotify.com//*"],
-          "run_at": "document_end",
-          "js": ["contentScript.js"]
+            "run_at": "document_end",
+            "matches": ["*://open.spotify.com/*"],
+            "js": ["content-script.js"],
+            "all_frames": true
         }
     ],
     "manifest_version": 2
