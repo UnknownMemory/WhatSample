@@ -2,7 +2,7 @@
     "name": "Spotify Sampled",
     "version": "0.1",
     "description": "Get the sample used in a song on Spotify",
-    "permissions": ["tabs", "background", "storage"],
+    "permissions": ["tabs", "background", "storage", "https://www.whosampled.com/*"],
     "background": {
         "scripts": ["background.js"],
         "persistent": false
