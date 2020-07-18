@@ -52,7 +52,20 @@ class Sampled {
             icon.append(path2);
 
             sampled.append(icon);
+            sampled.addEventListener('click', this.getSample);
         }
+    }
+
+    getSample() {
+        const artist = document.querySelector(
+            '._44843c8513baccb36b3fa171573a128f-scss.ellipsis-one-line > span > span > span > a'
+        ).textContent;
+        const trackname = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
+
+        const track = artist.concat(' ', trackname);
+        chrome.runtime.sendMessage({getSample: track}, function (response) {
+            console.log(response);
+        });
     }
 }
 
