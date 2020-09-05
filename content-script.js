@@ -57,13 +57,11 @@ class Sampled {
     }
 
     getSample() {
-        const artist = document.querySelector(
-            '._44843c8513baccb36b3fa171573a128f-scss.ellipsis-one-line > span > span > span > a'
-        ).textContent;
+        const artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
         const trackname = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
 
         const track = artist.concat(' ', trackname);
-        chrome.runtime.sendMessage({getSample: track}, function (response) {
+        chrome.runtime.sendMessage({getSample: track}, (response) => {
             console.log(response);
         });
     }
