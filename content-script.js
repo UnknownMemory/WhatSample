@@ -64,6 +64,8 @@ class Sampled {
         chrome.runtime.sendMessage({getSample: track}, (response) => {
             console.log(response);
         });
+
+        return true;
     }
 }
 
