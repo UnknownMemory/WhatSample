@@ -1,4 +1,5 @@
 #sampled-track {
+    position: relative;
     padding: 7px;
 }
 
@@ -8,4 +9,36 @@
 
 #sampled-track svg:hover {
     fill: #fff;
+}
+
+#sample-list {
+    /*display: none;*/
+    position: absolute;
+    bottom: 39px;
+    width: 220px;
+    right: -96px;
+    background-color: #282828;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 4px 12px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px 4px rgba(0, 0, 0, 0.5);
+    z-index: 1002;
+}
+
+#sample-list:before {
+    bottom: -20px;
+    left: auto;
+    right: 112px;
+    margin-left: -10px;
+    margin-right: -10px;
+    border: 10px solid transparent;
+    border-top-color: #282828;
+    position: absolute;
+    content: '';
+}
+
+#sample-list h3 {
+    display: block;
+    text-align: center;
+    padding: 14px;
+    color: #fff;
 }
