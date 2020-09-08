@@ -42,3 +42,34 @@
     padding: 14px;
     color: #fff;
 }
+
+.sample-details:hover {
+    background-color: #333;
+}
+
+.sample-song:hover {
+    text-decoration: none;
+}
+
+.sample-song-info {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 8px;
+}
+
+.sample-song-title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.sample-song-element {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: normal;
+    text-transform: none;
+}

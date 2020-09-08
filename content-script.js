@@ -91,6 +91,8 @@ class Sampled {
 
                 const sampleSong = document.createElement('a');
                 sampleSong.className = 'sample-song';
+                sampleSong.href = `https://www.whosampled.com${e.link}`;
+                sampleSong.setAttribute('target', '_blank');
 
                 const sampleSongInfo = document.createElement('div');
                 sampleSongInfo.className = 'sample-song-info';
@@ -105,13 +107,13 @@ class Sampled {
                 sampleSongElement.className = 'sample-song-element';
                 sampleSongElement.textContent = e.element;
                 sampleSongInfo.append(sampleSongElement);
-
+                /*
                 const sampleSongGenre = document.createElement('div');
                 sampleSongGenre.className = 'sample-song-genre';
                 sampleSongGenre.textContent = e.genre;
                 sampleSongInfo.append(sampleSongGenre);
 
-                /*
+                
                 const cover = document.createElement('img');
                 cover.src = `https://www.whosampled.com${e.cover}`;
                 sampleSong.append(cover);
