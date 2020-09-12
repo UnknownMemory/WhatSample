@@ -14,6 +14,8 @@ class Sampled {
                 this.artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
                 this.trackname = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
 
+                this.getSample();
+
                 observer.disconnect();
                 return this.songObs();
             }
@@ -67,8 +69,10 @@ class Sampled {
             sampleList.append(h3);
 
             sampled.append(sampleList);
+            sampled.addEventListener('click', () => {
+                document.querySelector('#sample-list').classList.toggle('is-visible');
+            });
             return;
-            //sampled.addEventListener('click', this.getSample);
         }
     }
 
@@ -114,22 +118,20 @@ class Sampled {
             sampleSongElement.className = 'sample-song-element';
             sampleSongElement.textContent = e.element;
             sampleSongInfo.append(sampleSongElement);
-            /*
-            const sampleSongGenre = document.createElement('div');
-            sampleSongGenre.className = 'sample-song-genre';
-            sampleSongGenre.textContent = e.genre;
-            sampleSongInfo.append(sampleSongGenre);
-
-            
-            const cover = document.createElement('img');
-            cover.src = `https://www.whosampled.com${e.cover}`;
-            sampleSong.append(cover);
-            */
 
             sampleDetails.append(sampleSong);
 
             list.append(sampleDetails);
         });
+    }
+
+    setError(notfound) {
+        const nfElement = document.createElement('div');
+        nfElement.className = 'samples-notfound';
+        nfElement.textContent = notfound;
+
+        const smplList = document.querySelector('#sample-list');
+        smplList.append(nfElement);
     }
 
     getSample() {
@@ -140,8 +142,11 @@ class Sampled {
             if (prevList) {
                 prevList.remove();
             }
-
-            this.setSample(response);
+            if (response.notfound) {
+                this.setError(response.notfound);
+            } else {
+                this.setSample(response);
+            }
         });
 
         return;

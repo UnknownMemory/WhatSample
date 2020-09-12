@@ -11,10 +11,16 @@
     fill: #fff;
 }
 
+.is-visible {
+    display: block !important;
+    -webkit-animation: fadeIn 333ms cubic-bezier(0.3, 0, 0, 1);
+    animation: fadeIn 333ms cubic-bezier(0.3, 0, 0, 1);
+}
+
 #sample-list {
-    /*display: none;*/
+    display: none;
     position: absolute;
-    bottom: 39px;
+    bottom: 37px;
     width: 220px;
     right: -96px;
     background-color: #282828;
@@ -36,7 +42,8 @@
     content: '';
 }
 
-#sample-list h3 {
+#sample-list h3,
+.samples-notfound {
     display: block;
     text-align: center;
     padding: 14px;
@@ -58,7 +65,8 @@
     padding: 8px;
 }
 
-.sample-song-title {
+.sample-song-title,
+.samples-notfound {
     font-size: 14px;
     font-weight: 700;
     line-height: 16px;

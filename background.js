@@ -5,7 +5,7 @@ const getSearchResult = async (url) => {
     if (Array.isArray(data.tracks) && data.tracks.length > 0) {
         return {res: data.tracks[0].url};
     } else {
-        return {error: 'No samples found for this track'};
+        return {notfound: 'No samples found for this track'};
     }
 };
 
@@ -43,8 +43,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 getSamples(`https://www.whosampled.com${data.res}`).then((samples) => {
                     sendResponse(samples);
                 });
-            } else if (data.error) {
-                console.log(data.error);
+            } else if (data.notfound) {
+                sendResponse(data);
             }
         });
     }
