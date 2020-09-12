@@ -18,20 +18,24 @@ const getSamples = async (url) => {
     const doc = parser.parseFromString(html, 'text/html');
 
     const smplSection = doc.querySelector('#content > div > div.layout-container.leftContent > section:nth-child(7)');
-    const samplesList = smplSection.querySelectorAll('.sampleEntry');
-    samplesList.forEach((sample) => {
-        let sampleData = {};
-        sampleData['artist'] = sample.querySelector('.trackArtist a').textContent;
-        sampleData['title'] = sample.querySelector('.trackName.playIcon').textContent;
-        sampleData['cover'] = sample.querySelector('a img').getAttribute('src');
-        sampleData['element'] = sample.querySelector('.trackBadge .topItem').textContent;
-        sampleData['genre'] = sample.querySelector('.trackBadge .bottomItem').textContent;
-        sampleData['link'] = sample.querySelector('.trackName.playIcon').getAttribute('href');
+    const smplHeader = smplSection.querySelector('.section-header-title').textContent;
 
-        samples.push(sampleData);
-    });
+    if (smplHeader.includes('Contains samples')) {
+        const samplesList = smplSection.querySelectorAll('.sampleEntry');
+        samplesList.forEach((sample) => {
+            let sampleData = {};
+            sampleData['artist'] = sample.querySelector('.trackArtist a').textContent;
+            sampleData['title'] = sample.querySelector('.trackName.playIcon').textContent;
+            sampleData['element'] = sample.querySelector('.trackBadge .topItem').textContent;
+            sampleData['link'] = sample.querySelector('.trackName.playIcon').getAttribute('href');
 
-    return samples;
+            samples.push(sampleData);
+        });
+
+        return samples;
+    } else {
+        return {notfound: 'No samples found for this track'};
+    }
 };
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {

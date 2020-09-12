@@ -139,9 +139,14 @@ class Sampled {
 
         chrome.runtime.sendMessage({getSample: track}, (response) => {
             const prevList = document.querySelector('.samples-list');
+            const notfound = document.querySelector('.samples-notfound');
+
             if (prevList) {
                 prevList.remove();
+            } else if (notfound) {
+                notfound.remove();
             }
+
             if (response.notfound) {
                 this.setError(response.notfound);
             } else {
