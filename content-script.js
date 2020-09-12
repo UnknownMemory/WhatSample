@@ -72,6 +72,14 @@ class Sampled {
             sampled.addEventListener('click', () => {
                 document.querySelector('#sample-list').classList.toggle('is-visible');
             });
+
+            document.addEventListener('click', (e) => {
+                const sampleList = document.querySelector('#sample-list');
+                if (e.target.closest('#sample-list') == null && e.target.closest('#sampled-track') == null) {
+                    sampleList.classList.remove('is-visible');
+                }
+            });
+
             return;
         }
     }
