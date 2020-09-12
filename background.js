@@ -2,7 +2,11 @@ const getSearchResult = async (url) => {
     let res = await fetch(url);
     let data = await res.json();
 
-    return data.tracks[0].url;
+    if (Array.isArray(data.tracks) && data.tracks.length > 0) {
+        return {res: data.tracks[0].url};
+    } else {
+        return {error: 'No samples found for this track'};
+    }
 };
 
 const getSamples = async (url) => {
@@ -35,9 +39,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         const url = `https://www.whosampled.com/ajax/search/?q=${encodeURI(request.getSample)}&_=`;
 
         getSearchResult(url).then((data) => {
-            getSamples(`https://www.whosampled.com${data}`).then((samples) => {
-                sendResponse(samples);
-            });
+            if (data.res) {
+                getSamples(`https://www.whosampled.com${data.res}`).then((samples) => {
+                    sendResponse(samples);
+                });
+            } else if (data.error) {
+                console.log(data.error);
+            }
         });
     }
     return true;

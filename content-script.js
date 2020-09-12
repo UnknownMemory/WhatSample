@@ -1,20 +1,22 @@
 class Sampled {
     constructor() {
-        this.mutationObs();
+        this.artist = null;
+        this.trackname = null;
     }
 
-    mutationObs() {
+    checkMain() {
         const target = document.body;
-        const config = {childList: true};
-        const observer = new MutationObserver((mutations) => {
+        const config = {childList: true, subtree: true};
+        const observer = new MutationObserver((mutations, observer) => {
             /* Check if the 'main' div was added to the DOM */
-            mutations.map((mutation) => {
-                const nodelist = mutation.previousSibling;
+            if (document.querySelector('#main') && document.querySelector('.now-playing')) {
+                this.setButton();
+                this.artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
+                this.trackname = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
 
-                if (nodelist && nodelist.id && nodelist.id == 'main') {
-                    return this.setButton();
-                }
-            });
+                observer.disconnect();
+                return this.songObs();
+            }
         });
 
         observer.observe(target, config);
@@ -65,68 +67,86 @@ class Sampled {
             sampleList.append(h3);
 
             sampled.append(sampleList);
-            sampled.addEventListener('click', this.getSample);
+            return;
+            //sampled.addEventListener('click', this.getSample);
         }
     }
 
-    getSample() {
-        const artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
-        const trackname = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
+    songObs() {
+        const target = document.querySelector('.now-playing');
+        const config = {characterData: true, subtree: true};
+        const observer = new MutationObserver((mutations, observer) => {
+            mutations.map((mutation) => {
+                this.artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
+                this.trackname = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
+                this.getSample();
+            });
+        });
 
-        const track = artist.concat(' ', trackname);
+        observer.observe(target, config);
+    }
+
+    setSample(response) {
+        const list = document.createElement('ul');
+        list.className = 'samples-list';
+        const smplList = document.querySelector('#sample-list');
+        smplList.append(list);
+
+        response.forEach((e) => {
+            const sampleDetails = document.createElement('li');
+            sampleDetails.className = 'sample-details';
+
+            const sampleSong = document.createElement('a');
+            sampleSong.className = 'sample-song';
+            sampleSong.href = `https://www.whosampled.com${e.link}`;
+            sampleSong.setAttribute('target', '_blank');
+
+            const sampleSongInfo = document.createElement('div');
+            sampleSongInfo.className = 'sample-song-info';
+            sampleSong.append(sampleSongInfo);
+
+            const sampleSongTitle = document.createElement('div');
+            sampleSongTitle.className = 'sample-song-title';
+            sampleSongTitle.textContent = `${e.artist} - ${e.title}`;
+            sampleSongInfo.append(sampleSongTitle);
+
+            const sampleSongElement = document.createElement('div');
+            sampleSongElement.className = 'sample-song-element';
+            sampleSongElement.textContent = e.element;
+            sampleSongInfo.append(sampleSongElement);
+            /*
+            const sampleSongGenre = document.createElement('div');
+            sampleSongGenre.className = 'sample-song-genre';
+            sampleSongGenre.textContent = e.genre;
+            sampleSongInfo.append(sampleSongGenre);
+
+            
+            const cover = document.createElement('img');
+            cover.src = `https://www.whosampled.com${e.cover}`;
+            sampleSong.append(cover);
+            */
+
+            sampleDetails.append(sampleSong);
+
+            list.append(sampleDetails);
+        });
+    }
+
+    getSample() {
+        const track = this.artist.concat(' ', this.trackname);
+
         chrome.runtime.sendMessage({getSample: track}, (response) => {
             const prevList = document.querySelector('.samples-list');
             if (prevList) {
                 prevList.remove();
             }
 
-            const list = document.createElement('ul');
-            list.className = 'samples-list';
-            const smplList = document.querySelector('#sample-list');
-            smplList.append(list);
-
-            response.forEach((e) => {
-                const sampleDetails = document.createElement('li');
-                sampleDetails.className = 'sample-details';
-
-                const sampleSong = document.createElement('a');
-                sampleSong.className = 'sample-song';
-                sampleSong.href = `https://www.whosampled.com${e.link}`;
-                sampleSong.setAttribute('target', '_blank');
-
-                const sampleSongInfo = document.createElement('div');
-                sampleSongInfo.className = 'sample-song-info';
-                sampleSong.append(sampleSongInfo);
-
-                const sampleSongTitle = document.createElement('div');
-                sampleSongTitle.className = 'sample-song-title';
-                sampleSongTitle.textContent = `${e.artist} - ${e.title}`;
-                sampleSongInfo.append(sampleSongTitle);
-
-                const sampleSongElement = document.createElement('div');
-                sampleSongElement.className = 'sample-song-element';
-                sampleSongElement.textContent = e.element;
-                sampleSongInfo.append(sampleSongElement);
-                /*
-                const sampleSongGenre = document.createElement('div');
-                sampleSongGenre.className = 'sample-song-genre';
-                sampleSongGenre.textContent = e.genre;
-                sampleSongInfo.append(sampleSongGenre);
-
-                
-                const cover = document.createElement('img');
-                cover.src = `https://www.whosampled.com${e.cover}`;
-                sampleSong.append(cover);
-                */
-
-                sampleDetails.append(sampleSong);
-
-                list.append(sampleDetails);
-            });
+            this.setSample(response);
         });
 
-        return true;
+        return;
     }
 }
 
 s = new Sampled();
+s.checkMain();
