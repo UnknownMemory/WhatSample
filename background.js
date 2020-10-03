@@ -17,7 +17,7 @@ const getSamples = async (url) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
 
-    const smplSection = doc.querySelector('#content > div > div.layout-container.leftContent > section:nth-child(7)');
+    const smplSection = doc.querySelector('#content > div > div.leftContent > section:nth-child(7)');
     const smplHeader = smplSection.querySelector('.section-header-title').textContent;
 
     if (smplHeader.includes('Contains samples')) {
