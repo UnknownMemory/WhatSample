@@ -1,3 +1,3 @@
 # SpotifySampled
-## Retrieve the samples from any song on Spotify
+## View the samples a song contains on Spotify
 ![](https://thumbs.gfycat.com/DelectableShallowAmazondolphin-size_restricted.gif)
