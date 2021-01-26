@@ -1,7 +1,7 @@
 {
-    "name": "Spotify Sampled",
+    "name": "Samplify",
     "version": "0.0.1",
-    "description": "Retrieve the samples from any song on Spotify",
+    "description": "Find the samples from a song on Spotify",
     "permissions": ["background", "*://*.whosampled.com/*", "*://open.spotify.com/*"],
     "background": {
         "scripts": ["background.js"],
@@ -12,7 +12,7 @@
             "run_at": "document_end",
             "matches": ["*://open.spotify.com/*"],
             "js": ["content-script.js"],
-            "css": ["css/spotifysampled.css"]
+            "css": ["css/samplify.css"]
         }
     ],
     "icons": {
