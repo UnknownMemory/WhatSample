@@ -11,9 +11,6 @@ class Sampled {
             /* Check if the 'main' div was added to the DOM */
             if (document.querySelector('#main') && document.querySelector('.now-playing')) {
                 this.setButton();
-                this.artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
-                this.trackname = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
-
                 this.getSample();
 
                 observer.disconnect();
@@ -22,6 +19,14 @@ class Sampled {
         });
 
         observer.observe(target, config);
+    }
+
+    textProcessing(trackname) {
+        if (trackname.includes('(')) {
+            return trackname.substring(0, trackname.indexOf('(')).trim();
+        } else {
+            return trackname;
+        }
     }
 
     setButton() {
@@ -73,7 +78,7 @@ class Sampled {
                 document.querySelector('#sample-list').classList.toggle('is-visible');
             });
 
-            document.addEventListener('click', (e) => {
+            document.addEventListener('click', e => {
                 const sampleList = document.querySelector('#sample-list');
                 if (e.target.closest('#sample-list') == null && e.target.closest('#sampled-track') == null) {
                     sampleList.classList.remove('is-visible');
@@ -88,9 +93,7 @@ class Sampled {
         const target = document.querySelector('.now-playing');
         const config = {characterData: true, subtree: true};
         const observer = new MutationObserver((mutations, observer) => {
-            mutations.map((mutation) => {
-                this.artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
-                this.trackname = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
+            mutations.map(mutation => {
                 this.getSample();
             });
         });
@@ -104,7 +107,7 @@ class Sampled {
         const smplList = document.querySelector('#sample-list');
         smplList.append(list);
 
-        response.forEach((e) => {
+        response.forEach(e => {
             const sampleDetails = document.createElement('li');
             sampleDetails.className = 'sample-details';
 
@@ -143,9 +146,10 @@ class Sampled {
     }
 
     getSample() {
-        const track = this.artist.concat(' ', this.trackname);
+        this.artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
+        this.trackname = this.textProcessing(document.querySelector('a[data-testid=nowplaying-track-link]').textContent);
 
-        chrome.runtime.sendMessage({getSample: track}, (response) => {
+        chrome.runtime.sendMessage({artist: this.artist, trackname: this.trackname}, response => {
             const prevList = document.querySelector('.samples-list');
             const notfound = document.querySelector('.samples-notfound');
 
@@ -155,8 +159,8 @@ class Sampled {
                 notfound.remove();
             }
 
-            if (response.notfound) {
-                this.setError(response.notfound);
+            if (response.notFound) {
+                this.setError(response.notFound);
             } else {
                 this.setSample(response);
             }
@@ -166,5 +170,5 @@ class Sampled {
     }
 }
 
-s = new Sampled();
+const s = new Sampled();
 s.checkMain();
