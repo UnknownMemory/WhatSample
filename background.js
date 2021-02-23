@@ -18,8 +18,8 @@ const checkResult = (data, artist, trackname) => {
     data.some(e => {
         artistRegExp = new RegExp(artist.toLowerCase());
         if (artistRegExp.test(e.artist_name.toLowerCase())) {
-            e.track_name.replace((/[',\s]/g, ''));
-            trackname.replace((/[',\s]/g, ''));
+            e.track_name = e.track_name.replace(/[',\s]/g, '');
+            trackname = trackname.replace(/[',\s]/g, '');
 
             tracknameRegExp = new RegExp(trackname.toLowerCase());
             if (tracknameRegExp.test(e.track_name.toLowerCase())) {
