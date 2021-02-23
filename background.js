@@ -15,7 +15,7 @@ const getSearchResult = async (url, artist, trackname) => {
 
 const checkResult = (data, artist, trackname) => {
     let url = false;
-    data.map(e => {
+    data.some(e => {
         e.artist_name = textProcessing(e.artist_name, true);
 
         if (e.artist_name.toLowerCase() === artist.toLowerCase()) {
@@ -25,6 +25,7 @@ const checkResult = (data, artist, trackname) => {
 
             if (e.track_name.toLowerCase() === trackname.toLowerCase()) {
                 url = e.url;
+                return true;
             }
         }
     });
