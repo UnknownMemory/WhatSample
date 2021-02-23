@@ -16,32 +16,19 @@ const getSearchResult = async (url, artist, trackname) => {
 const checkResult = (data, artist, trackname) => {
     let url = false;
     data.some(e => {
-        e.artist_name = textProcessing(e.artist_name, true);
-
-        if (e.artist_name.toLowerCase() === artist.toLowerCase()) {
+        artistRegExp = new RegExp(artist.toLowerCase());
+        if (artistRegExp.test(e.artist_name.toLowerCase())) {
             e.track_name.replace((/[',\s]/g, ''));
-            e.track_name = textProcessing(e.track_name);
             trackname.replace((/[',\s]/g, ''));
 
-            if (e.track_name.toLowerCase() === trackname.toLowerCase()) {
+            tracknameRegExp = new RegExp(trackname.toLowerCase());
+            if (tracknameRegExp.test(e.track_name.toLowerCase())) {
                 url = e.url;
                 return true;
             }
         }
     });
     return url;
-};
-
-const textProcessing = (text, artist = false) => {
-    if (text.includes('(')) {
-        return text.substring(0, text.indexOf('(')).trim();
-    } else if (text.includes('feat')) {
-        return text.substring(0, text.indexOf('feat')).trim();
-    } else if (artist && text.includes('and')) {
-        return text.substring(0, text.indexOf('and')).trim();
-    } else {
-        return text;
-    }
 };
 
 const getSamples = async url => {
