@@ -16,12 +16,12 @@ const getSearchResult = async (url, artist, trackname) => {
 const checkResult = (data, artist, trackname) => {
     let url = false;
     data.some(e => {
-        artistRegExp = new RegExp(artist.toLowerCase());
+        artistRegExp = new RegExp(escapeRegEx(artist).toLowerCase());
         if (artistRegExp.test(e.artist_name.toLowerCase())) {
             e.track_name = e.track_name.replace(/[',\s]/g, '');
             trackname = trackname.replace(/[',\s]/g, '');
 
-            tracknameRegExp = new RegExp(trackname.toLowerCase());
+            tracknameRegExp = new RegExp(escapeRegEx(trackname).toLowerCase());
             if (tracknameRegExp.test(e.track_name.toLowerCase())) {
                 url = e.url;
                 return true;
@@ -40,24 +40,30 @@ const getSamples = async url => {
     const doc = parser.parseFromString(html, 'text/html');
 
     const smplSection = doc.querySelector('#content > div > div.leftContent > section:nth-child(6)');
-    const smplHeader = smplSection.querySelector('.section-header-title').textContent;
+    if (smplSection != null) {
+        const smplHeader = smplSection.querySelector('.section-header-title').textContent;
 
-    if (smplHeader.includes('Contains samples')) {
-        const samplesList = smplSection.querySelectorAll('.sampleEntry');
-        samplesList.forEach(sample => {
-            let sampleData = {};
-            sampleData['artist'] = sample.querySelector('.trackArtist a').textContent;
-            sampleData['title'] = sample.querySelector('.trackName.playIcon').textContent;
-            sampleData['element'] = sample.querySelector('.trackBadge .topItem').textContent;
-            sampleData['link'] = sample.querySelector('.trackName.playIcon').getAttribute('href');
+        if (smplHeader.includes('Contains samples')) {
+            const samplesList = smplSection.querySelectorAll('.sampleEntry');
+            samplesList.forEach(sample => {
+                let sampleData = {};
+                sampleData['artist'] = sample.querySelector('.trackArtist a').textContent;
+                sampleData['title'] = sample.querySelector('.trackName.playIcon').textContent;
+                sampleData['element'] = sample.querySelector('.trackBadge .topItem').textContent;
+                sampleData['link'] = sample.querySelector('.trackName.playIcon').getAttribute('href');
 
-            samples.push(sampleData);
-        });
+                samples.push(sampleData);
+            });
 
-        return samples;
-    } else {
-        return {notFound: 'No samples found for this track'};
+            return samples;
+        }
     }
+
+    return {notFound: 'No samples found for this track'};
+};
+
+const escapeRegEx = str => {
+    return str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&').replace(/-/g, '\\x2d');
 };
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
