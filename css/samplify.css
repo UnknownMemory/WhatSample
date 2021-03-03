@@ -42,7 +42,7 @@
     content: '';
 }
 
-#sample-list h3,
+#sample-list h4,
 .samples-notfound {
     display: block;
     text-align: center;

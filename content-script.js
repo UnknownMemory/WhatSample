@@ -69,9 +69,9 @@ class Sampled {
             const sampleList = document.createElement('div');
             sampleList.id = 'sample-list';
 
-            const h3 = document.createElement('h3');
-            h3.textContent = 'Samples';
-            sampleList.append(h3);
+            const h4 = document.createElement('h4');
+            h4.textContent = 'Samples';
+            sampleList.append(h4);
 
             sampled.append(sampleList);
             sampled.addEventListener('click', () => {
