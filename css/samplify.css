@@ -43,7 +43,7 @@
 }
 
 #sample-list h4,
-.samples-notfound {
+.samples-not-found {
     display: block;
     text-align: center;
     padding: 14px;
@@ -66,7 +66,7 @@
 }
 
 .sample-song-title,
-.samples-notfound {
+.samples-not-found {
     font-size: 14px;
     font-weight: 700;
     line-height: 16px;

@@ -67,7 +67,7 @@ const setSample = response => {
     const smplList = document.querySelector('#sample-list');
     smplList.append(list);
 
-    response.map(e => {
+    response.forEach(e => {
         const sampleDetails = document.createElement('li');
         sampleDetails.className = 'sample-details';
 
@@ -96,10 +96,10 @@ const setSample = response => {
     });
 };
 
-const setError = notfound => {
+const setError = data => {
     const nfElement = document.createElement('div');
-    nfElement.className = 'samples-notfound';
-    nfElement.textContent = notfound;
+    nfElement.className = 'samples-not-found';
+    nfElement.textContent = data;
 
     const smplList = document.querySelector('#sample-list');
     smplList.append(nfElement);
@@ -110,13 +110,11 @@ const getSample = () => {
     trackname = textProcessing(document.querySelector('a[data-testid=nowplaying-track-link]').textContent);
 
     chrome.runtime.sendMessage({artist: artist, trackname: trackname}, response => {
-        const prevList = document.querySelector('.samples-list');
-        const notfound = document.querySelector('.samples-notfound');
+        const queryS = document.querySelector('#sample-list > ul');
+        const prevList = queryS !== null ? queryS : document.querySelector('#sample-list > div');
 
         if (prevList) {
             prevList.remove();
-        } else if (notfound) {
-            notfound.remove();
         }
 
         if (response.notFound) {
@@ -140,7 +138,7 @@ const songObs = () => {
     const target = document.querySelector('.now-playing');
     const config = {characterData: true, subtree: true};
     const observer = new MutationObserver(mutations => {
-        mutations.map(mutation => {
+        mutations.forEach(mutation => {
             getSample();
         });
     });
