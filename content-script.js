@@ -48,6 +48,7 @@ const setButton = () => {
         sampled.append(sampleList);
         sampled.addEventListener('click', () => {
             document.querySelector('#sample-list').classList.toggle('is-visible');
+            getSample();
         });
 
         document.addEventListener('click', e => {
@@ -106,10 +107,7 @@ const setError = data => {
 };
 
 const getSample = () => {
-    artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
-    trackname = textProcessing(document.querySelector('a[data-testid=nowplaying-track-link]').textContent);
-
-    chrome.runtime.sendMessage({artist: artist, trackname: trackname}, response => {
+    if (trackname !== document.querySelector('a[data-testid=nowplaying-track-link]').textContent) {
         const queryS = document.querySelector('#sample-list > ul');
         const prevList = queryS !== null ? queryS : document.querySelector('#sample-list > div');
 
@@ -117,14 +115,19 @@ const getSample = () => {
             prevList.remove();
         }
 
-        if (response.notFound) {
-            setError(response.notFound);
-        } else {
-            setSample(response);
-        }
-    });
+        artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
+        trackname = textProcessing(document.querySelector('a[data-testid=nowplaying-track-link]').textContent);
 
-    return;
+        chrome.runtime.sendMessage({artist: artist, trackname: trackname}, response => {
+            if (response.notFound) {
+                setError(response.notFound);
+            } else {
+                setSample(response);
+            }
+        });
+
+        return;
+    }
 };
 
 const textProcessing = trackname => {
@@ -132,18 +135,6 @@ const textProcessing = trackname => {
         return trackname.substring(0, trackname.indexOf('(')).trim();
     }
     return trackname;
-};
-
-const songObs = () => {
-    const target = document.querySelector('.now-playing');
-    const config = {characterData: true, subtree: true};
-    const observer = new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-            getSample();
-        });
-    });
-
-    observer.observe(target, config);
 };
 
 (() => {
@@ -154,7 +145,7 @@ const songObs = () => {
             setButton();
 
             observer.disconnect();
-            return songObs();
+            return;
         }
     });
 
