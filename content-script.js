@@ -28,19 +28,6 @@ const setButton = () => {
         const extra = document.querySelector('.ExtraControls');
         extra.insertAdjacentHTML('afterbegin', html);
 
-        const st = document.querySelector('#sampled-track');
-        st.addEventListener('click', () => {
-            document.querySelector('#sample-list').classList.toggle('is-visible');
-            getSample();
-        });
-
-        document.addEventListener('click', e => {
-            const sampleList = document.querySelector('#sample-list');
-            if (e.target.closest('#sample-list') == null && e.target.closest('#sampled-track') == null) {
-                sampleList.classList.remove('is-visible');
-            }
-        });
-
         return;
     }
 };
@@ -87,7 +74,7 @@ const getSample = () => {
     const newArtist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
     const newTrack = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
 
-    if (trackname !== newArtist && artist !== newTrack) {
+    if (trackname !== newTrack && artist !== newArtist) {
         const queryS = document.querySelector('#sample-list > ul');
         const prevList = queryS !== null ? queryS : document.querySelector('#sample-list > div');
 
@@ -97,7 +84,6 @@ const getSample = () => {
 
         artist = newArtist;
         trackname = textProcessing(newTrack);
-
         chrome.runtime.sendMessage({artist: artist, trackname: trackname}, response => {
             if (response.notFound) {
                 setError(response.notFound);
@@ -128,6 +114,19 @@ const textProcessing = trackname => {
     const observer = new MutationObserver((mutations, observer) => {
         if (document.querySelector('#main') && document.querySelector('.now-playing')) {
             setButton();
+
+            const e = document.querySelector('#sampled-track');
+            e.addEventListener('click', () => {
+                document.querySelector('#sample-list').classList.toggle('is-visible');
+                getSample();
+            });
+
+            document.addEventListener('click', e => {
+                const sampleList = document.querySelector('#sample-list');
+                if (e.target.closest('#sample-list') == null && e.target.closest('#sampled-track') == null) {
+                    sampleList.classList.remove('is-visible');
+                }
+            });
 
             observer.disconnect();
             return;
