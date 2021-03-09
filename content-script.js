@@ -1,52 +1,35 @@
+'use strict';
+
 let artist;
 let trackname;
 
+/**
+ * Insert Samplify on the Spotify player
+ */
 const setButton = () => {
     if (document.querySelector('#sampled-track')) {
         return;
     } else {
-        const spotifySampled = document.createElement('div');
-        spotifySampled.id = 'spotify-sampled';
+        const html = `<div id="samplify">
+                        <div id="sampled-track">
+                            <svg viewBox="0 0 24 24" fill="#b3b3b3" width="18px" height="18px">
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 
+                                14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 
+                                4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z">
+                                </path>
+                            </svg>
+                            <div id="sample-list">
+                                <h4>Samples</h4>
+                            </div>
+                        </div>
+                      </div>`;
 
-        const sampled = document.createElement('div');
-        sampled.id = 'sampled-track';
-
-        /* Insert the button to the player */
         const extra = document.querySelector('.ExtraControls');
-        extra.prepend(spotifySampled);
+        extra.insertAdjacentHTML('afterbegin', html);
 
-        /* Add an icon to the button */
-        const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        icon.setAttributeNS(null, 'viewBox', '0 0 24 24');
-        icon.setAttributeNS(null, 'fill', '#b3b3b3');
-        icon.setAttributeNS(null, 'width', '18px');
-        icon.setAttributeNS(null, 'height', '18px');
-
-        const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path1.setAttributeNS(null, 'd', 'M0 0h24v24H0z');
-        path1.setAttributeNS(null, 'fill', 'none');
-        icon.append(path1);
-
-        const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path2.setAttributeNS(
-            null,
-            'd',
-            'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z'
-        );
-        icon.append(path2);
-        sampled.append(icon);
-        spotifySampled.append(sampled);
-
-        /* Add sample list container*/
-        const sampleList = document.createElement('div');
-        sampleList.id = 'sample-list';
-
-        const h4 = document.createElement('h4');
-        h4.textContent = 'Samples';
-        sampleList.append(h4);
-
-        sampled.append(sampleList);
-        sampled.addEventListener('click', () => {
+        const st = document.querySelector('#sampled-track');
+        st.addEventListener('click', () => {
             document.querySelector('#sample-list').classList.toggle('is-visible');
             getSample();
         });
@@ -62,52 +45,49 @@ const setButton = () => {
     }
 };
 
+/**
+ * Add the list of samples to the DOM
+ * @param {Object} response Response from the background script
+ */
 const setSample = response => {
-    const list = document.createElement('ul');
-    list.className = 'samples-list';
-    const smplList = document.querySelector('#sample-list');
-    smplList.append(list);
+    const e = document.querySelector('#sample-list');
+    e.insertAdjacentHTML('beforeend', '<ul class="samples-list"></ul>');
 
-    response.forEach(e => {
-        const sampleDetails = document.createElement('li');
-        sampleDetails.className = 'sample-details';
+    const list = document.querySelector('.samples-list');
+    response.forEach(sample => {
+        const html = `<li class="sample-details">
+                        <a class="sample-song" href=https://www.whosampled.com${sample.link} target="_blank">
+                            <div class="sample-song-info">
+                                <div class="sample-song-title">${sample.artist} - ${sample.title}</div>
+                                <div class="sample-song-element">${sample.element}</div>
+                            </div>
+                        </a>
+                      </li>`;
 
-        const sampleSong = document.createElement('a');
-        sampleSong.className = 'sample-song';
-        sampleSong.href = `https://www.whosampled.com${e.link}`;
-        sampleSong.setAttribute('target', '_blank');
-
-        const sampleSongInfo = document.createElement('div');
-        sampleSongInfo.className = 'sample-song-info';
-        sampleSong.append(sampleSongInfo);
-
-        const sampleSongTitle = document.createElement('div');
-        sampleSongTitle.className = 'sample-song-title';
-        sampleSongTitle.textContent = `${e.artist} - ${e.title}`;
-        sampleSongInfo.append(sampleSongTitle);
-
-        const sampleSongElement = document.createElement('div');
-        sampleSongElement.className = 'sample-song-element';
-        sampleSongElement.textContent = e.element;
-        sampleSongInfo.append(sampleSongElement);
-
-        sampleDetails.append(sampleSong);
-
-        list.append(sampleDetails);
+        list.insertAdjacentHTML('afterbegin', html);
     });
+
+    return;
 };
 
-const setError = data => {
-    const nfElement = document.createElement('div');
-    nfElement.className = 'samples-not-found';
-    nfElement.textContent = data;
-
-    const smplList = document.querySelector('#sample-list');
-    smplList.append(nfElement);
+/**
+ * Display a message if no sample was found
+ * @param {string} response Response from the background script
+ */
+const setError = response => {
+    const e = document.querySelector('#sample-list');
+    e.insertAdjacentHTML('beforeend', `<div class="samples-not-found">${response}</div>`);
+    return;
 };
 
+/**
+ * Send the artist & track to the background script then pass the result to a callback function
+ */
 const getSample = () => {
-    if (trackname !== document.querySelector('a[data-testid=nowplaying-track-link]').textContent) {
+    const newArtist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
+    const newTrack = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
+
+    if (trackname !== newArtist && artist !== newTrack) {
         const queryS = document.querySelector('#sample-list > ul');
         const prevList = queryS !== null ? queryS : document.querySelector('#sample-list > div');
 
@@ -115,8 +95,8 @@ const getSample = () => {
             prevList.remove();
         }
 
-        artist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
-        trackname = textProcessing(document.querySelector('a[data-testid=nowplaying-track-link]').textContent);
+        artist = newArtist;
+        trackname = textProcessing(newTrack);
 
         chrome.runtime.sendMessage({artist: artist, trackname: trackname}, response => {
             if (response.notFound) {
@@ -130,6 +110,11 @@ const getSample = () => {
     }
 };
 
+/**
+ * Filter the track
+ * @param {string} trackname Current track
+ * @returns {string}
+ */
 const textProcessing = trackname => {
     if (trackname.includes('(')) {
         return trackname.substring(0, trackname.indexOf('(')).trim();
