@@ -1,3 +1,13 @@
+'use strict';
+
+/**
+ * Search for samples on WhoSampled.com
+ * @async
+ * @param {string} url
+ * @param {string} artist
+ * @param {string} trackname
+ * @returns {Object}
+ */
 const getSearchResult = async (url, artist, trackname) => {
     let res = await fetch(url);
     let data = await res.json();
@@ -13,15 +23,22 @@ const getSearchResult = async (url, artist, trackname) => {
     return result_url;
 };
 
+/**
+ * Verify the result of the search
+ * @param {Array} data
+ * @param {string} artist
+ * @param {string} trackname
+ * @returns
+ */
 const checkResult = (data, artist, trackname) => {
     let url = false;
     data.some(e => {
-        artistRegExp = new RegExp(escapeRegEx(artist).toLowerCase());
+        const artistRegExp = new RegExp(escapeRegEx(artist).toLowerCase());
         if (artistRegExp.test(e.artist_name.toLowerCase())) {
             e.track_name = e.track_name.replace(/[',\s]/g, '');
             trackname = trackname.replace(/[',\s]/g, '');
 
-            tracknameRegExp = new RegExp(escapeRegEx(trackname).toLowerCase());
+            const tracknameRegExp = new RegExp(escapeRegEx(trackname).toLowerCase());
             if (tracknameRegExp.test(e.track_name.toLowerCase())) {
                 url = e.url;
                 return true;
@@ -31,6 +48,12 @@ const checkResult = (data, artist, trackname) => {
     return url;
 };
 
+/**
+ * Get the list of samples
+ * @async
+ * @param {string} url
+ * @returns {(Array|Object)}
+ */
 const getSamples = async url => {
     let res = await fetch(url);
     let html = await res.text();
@@ -62,10 +85,18 @@ const getSamples = async url => {
     return {notFound: 'No samples found for this track'};
 };
 
+/**
+ * Escape a string for regex
+ * @param {string} str
+ * @returns {string}
+ */
 const escapeRegEx = str => {
     return str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&').replace(/-/g, '\\x2d');
 };
 
+/**
+ * Search for samples and send the result to the content script
+ */
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.artist && request.trackname) {
         const query = request.artist.concat(' ', request.trackname);

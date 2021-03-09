@@ -47,7 +47,7 @@ const setButton = () => {
 
 /**
  * Add the list of samples to the DOM
- * @param {Object} response Response from the background script
+ * @param {Array} response Response from the background script
  */
 const setSample = response => {
     const e = document.querySelector('#sample-list');
