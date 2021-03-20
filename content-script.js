@@ -112,7 +112,7 @@ const textProcessing = trackname => {
     const target = document.body;
     const config = {childList: true, subtree: true};
     const observer = new MutationObserver((mutations, observer) => {
-        if (document.querySelector('#main') && document.querySelector('.now-playing')) {
+        if (document.querySelector('#main') && document.querySelector('.Root__now-playing-bar')) {
             setButton();
 
             const e = document.querySelector('#sampled-track');
