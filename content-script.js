@@ -74,7 +74,7 @@ const getSample = () => {
     const newArtist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
     const newTrack = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
 
-    if (trackname !== newTrack && artist !== newArtist) {
+    if (trackname != newTrack || artist != newArtist) {
         const queryS = document.querySelector('#sample-list > ul');
         const prevList = queryS !== null ? queryS : document.querySelector('#sample-list > div');
 
@@ -118,7 +118,9 @@ const textProcessing = trackname => {
             const e = document.querySelector('#sampled-track');
             e.addEventListener('click', () => {
                 document.querySelector('#sample-list').classList.toggle('is-visible');
-                getSample();
+                if (document.querySelector('#sample-list').classList.contains('is-visible')) {
+                    getSample();
+                }
             });
 
             document.addEventListener('click', e => {
