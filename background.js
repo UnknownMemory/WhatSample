@@ -62,7 +62,8 @@ const getSamples = async url => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
 
-    const smplSection = doc.querySelector('#content > div > div.leftContent > section:nth-child(6)');
+    const smplSection = doc.querySelector('#content > div > div.leftContent > section:nth-child(9)');
+    console.log(smplSection);
     if (smplSection != null) {
         const smplHeader = smplSection.querySelector('.section-header-title').textContent;
 
