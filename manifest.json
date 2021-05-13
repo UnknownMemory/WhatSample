@@ -1,6 +1,6 @@
 {
     "name": "Samplify",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "Find the samples from a song on Spotify",
     "permissions": ["background", "*://*.whosampled.com/*", "*://open.spotify.com/*"],
     "background": {
