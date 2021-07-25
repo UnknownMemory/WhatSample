@@ -71,8 +71,8 @@ const setError = response => {
  * Send the artist & track to the background script then pass the result to a callback function
  */
 const getSample = () => {
-    const newArtist = document.querySelector('.b6d18e875efadd20e8d037931d535319-scss a').textContent;
-    const newTrack = document.querySelector('a[data-testid=nowplaying-track-link]').textContent;
+    const newArtist = document.querySelector('a[data-testid=context-item-info-artist]').textContent;
+    const newTrack = document.querySelector('a[data-testid=context-item-link]').textContent;
 
     if (trackname != newTrack || artist != newArtist) {
         const queryS = document.querySelector('#sample-list > ul');
