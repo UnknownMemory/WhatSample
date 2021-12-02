@@ -59,11 +59,10 @@ const getSamples = async url => {
     let html = await res.text();
 
     let samples = [];
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+    // const parser = new DOMParser();
+    // const doc = parser.parseFromString(html, 'text/html');
 
-    const smplSection = doc.querySelector('#content > div > div.leftContent > section:nth-child(6)');
-    //console.log(smplSection);
+    const smplSection = html.querySelector('#content > div > div.leftContent > section:nth-child(6)');
     if (smplSection != null) {
         const smplHeader = smplSection.querySelector('.section-header-title');
 

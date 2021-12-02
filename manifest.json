@@ -2,10 +2,10 @@
     "name": "Samplify",
     "version": "0.0.9",
     "description": "Find the samples from a song on Spotify",
-    "permissions": ["background", "*://*.whosampled.com/*", "*://open.spotify.com/*"],
+    "permissions": ["background"],
+    "host_permissions": ["*://*.whosampled.com/*", "*://open.spotify.com/*"],
     "background": {
-        "scripts": ["background.js"],
-        "persistent": false
+        "service_worker": "background.js",
     },
     "content_scripts": [
         {
@@ -20,5 +20,5 @@
         "48": "icon_48.png",
         "128": "icon_128.png"
     },
-    "manifest_version": 2
+    "manifest_version": 3
 }
