@@ -1,0 +1,29 @@
+{
+  "name": "samplify",
+  "version": "0.0.9",
+  "description": "This extension add a button on the music player of the Spotify Web app and shows if the song contains a sample.\r The data comes from WhoSampled.com",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UnknownMemory/Samplify.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UnknownMemory/Samplify/issues"
+  },
+  "homepage": "https://github.com/UnknownMemory/Samplify#readme",
+  "devDependencies": {
+    "webpack": "^5.64.4",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.6.0"
+  },
+  "dependencies": {
+    "jsdom": "^19.0.0",
+    "node-html-parser": "^5.1.0"
+  }
+}

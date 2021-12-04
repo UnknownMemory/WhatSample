@@ -1,4 +1,5 @@
 'use strict';
+const HTMLparser = require('node-html-parser');
 
 /**
  * Search for samples on WhoSampled.com
@@ -59,10 +60,9 @@ const getSamples = async url => {
     let html = await res.text();
 
     let samples = [];
-    // const parser = new DOMParser();
-    // const doc = parser.parseFromString(html, 'text/html');
+    const doc = HTMLparser.parse(html);
 
-    const smplSection = html.querySelector('#content > div > div.leftContent > section:nth-child(6)');
+    const smplSection = doc.querySelector('#content > div > div.leftContent > section:nth-child(6)');
     if (smplSection != null) {
         const smplHeader = smplSection.querySelector('.section-header-title');
 
