@@ -25,7 +25,7 @@ const setButton = () => {
                         </div>
                       </div>`;
 
-        const extra = document.querySelector('.ExtraControls');
+        const extra = document.querySelector('.ClYTTKGdd9KB7D9MXicj');
         extra.insertAdjacentHTML('afterbegin', html);
 
         return;
