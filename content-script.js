@@ -25,7 +25,7 @@ const setButton = () => {
                         </div>
                       </div>`;
 
-        const extra = document.querySelector('.ClYTTKGdd9KB7D9MXicj');
+        const extra = document.querySelector('footer > div > div:nth-child(3) > div');
         extra.insertAdjacentHTML('afterbegin', html);
 
         return;
