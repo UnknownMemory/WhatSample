@@ -4,8 +4,7 @@
     "description": "Find the samples from a song on Spotify",
     "main": "background.js",
     "scripts": {
-        "build": "webpack --mode production",
-        "build-dev": "webpack --mode development"
+        "build": "webpack --mode production"
     },
     "repository": {
         "type": "git",
