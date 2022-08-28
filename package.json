@@ -1,29 +1,30 @@
 {
-  "name": "samplify",
-  "version": "0.1.2",
-  "description": "Find the samples from a song on Spotify",
-  "main": "background.js",
-  "scripts": {
-    "build": "webpack --mode production"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/UnknownMemory/Samplify.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/UnknownMemory/Samplify/issues"
-  },
-  "homepage": "https://github.com/UnknownMemory/Samplify#readme",
-  "devDependencies": {
-    "clean-webpack-plugin": "^4.0.0",
-    "copy-webpack-plugin": "^10.0.0",
-    "webpack": "^5.64.4",
-    "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.6.0"
-  },
-  "dependencies": {
-    "node-html-parser": "^5.1.0"
-  }
+    "name": "samplify",
+    "version": "0.1.3",
+    "description": "Find the samples from a song on Spotify",
+    "main": "background.js",
+    "scripts": {
+        "build": "webpack --mode production",
+        "build-dev": "webpack --mode development"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/UnknownMemory/Samplify.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/UnknownMemory/Samplify/issues"
+    },
+    "homepage": "https://github.com/UnknownMemory/Samplify#readme",
+    "devDependencies": {
+        "clean-webpack-plugin": "^4.0.0",
+        "copy-webpack-plugin": "^10.0.0",
+        "webpack": "^5.64.4",
+        "webpack-cli": "^4.9.1",
+        "webpack-dev-server": "^4.6.0"
+    },
+    "dependencies": {
+        "node-html-parser": "^5.1.0"
+    }
 }
