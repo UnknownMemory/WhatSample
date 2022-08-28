@@ -13,6 +13,15 @@ module.exports = {
         publicPath: './',
         filename: '[name].bundle.js',
     },
+    module: {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                loader: 'ts-loader',
+                exclude: /node_modules/,
+            },
+        ]
+    },
     plugins: [
         new CleanWebpackPlugin({
             verbose: true,
