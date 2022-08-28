@@ -6,6 +6,6 @@ export interface SampleData {
 }
 
 export interface ServiceWorkerMessage {
-    res?: string,
+    res?: SampleData[],
     notFound?: string,
 }

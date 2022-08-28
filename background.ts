@@ -73,7 +73,7 @@ const getSamples = async (url: string): Promise<object | SampleData> => {
                 samples.push(sampleData);
             });
 
-            return samples;
+            return { res: samples };
         }
     }
 
