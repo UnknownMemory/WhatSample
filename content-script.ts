@@ -38,7 +38,6 @@ const setSample = (response: ServiceWorkerMessage['res']) => {
     e?.insertAdjacentHTML('beforeend', '<ul class="samples-list"></ul>');
 
     const list: HTMLElement | null = document.querySelector('.samples-list');
-    console.log(response)
     response!.forEach(sample => {
         const html = `<li class="sample-details">
                         <a class="sample-song" href=https://www.whosampled.com${sample.link} target="_blank">
