@@ -18,4 +18,22 @@
   "condition": {
     "urlFilter": "*://*.whosampled.com/*"
   }
-}]
+},
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Cookie",
+          "operation": "set",
+          "value": "sessionid=\"\""
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*://*.whosampled.com/*"
+    }
+  }
+]

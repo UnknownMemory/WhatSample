@@ -1,6 +1,6 @@
 {
     "name": "whatsample",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Find the samples from a song on Spotify",
     "main": "background.ts",
     "scripts": {
