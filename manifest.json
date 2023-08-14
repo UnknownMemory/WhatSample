@@ -11,7 +11,7 @@
             "run_at": "document_end",
             "matches": ["*://open.spotify.com/*"],
             "js": ["content_script.bundle.js"],
-            "css": ["css/samplify.css"]
+            "css": ["css/whatsample.css"]
         }
     ],
     "icons": {

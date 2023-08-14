@@ -20,7 +20,7 @@ const setButton = () => {
                                 </path>
                             </svg>
                             <div id="sample-list">
-                                <h4>Samples</h4>
+                                <h3>Samples</h3>
                             </div>
                         </div>
                       </div>`;
