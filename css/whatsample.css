@@ -79,8 +79,8 @@
 
 .sample-song-title,
 .samples-not-found {
-    font-size: 14px;
-        font-weight: 400;
+    font-size: 0.9rem;
+    font-weight: 400;
     line-height: 16px;
     letter-spacing: normal;
     text-transform: none;

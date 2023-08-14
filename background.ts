@@ -1,26 +1,20 @@
 'use strict';
 
 import {SampleData, ServiceWorkerMessage, Track} from './whatsample'
-import {samplesList, search, track} from "./data";
 
+const fetchService = async (url: string) => {
+    const rootURL: string = "https://www.whosampled.com/apimob/v1/"
 
-// const fetchService = async (url: string) => {
-//     const rootURL: string = "https://www.whosampled.com/apimob/v1/"
-//
-//     const res = await fetch(rootURL+url, {
-//         method: 'GET',
-//         headers: {
-//             'User-Agent': 'okhttp/4.9.3',
-//             'Cookie': 'sessionid=""'
-//         }
-//     })
-//
-//     if(res.ok){
-//         return res.json()
-//     }
-//
-//     return {'error': 'An error occured during the request'}
-// }
+    const res = await fetch(rootURL+url, {
+        method: 'GET',
+    })
+
+    if(res.ok){
+        return res.json()
+    }
+
+    return {'error': 'An error occured during the request'}
+}
 
 /**
  * Search the track on WhoSampled.com
@@ -29,11 +23,10 @@ import {samplesList, search, track} from "./data";
  * @param trackname
  */
 const getSearchResult = async (query: string, artist: string, trackname: string): Promise<object> => {
-    // let response = fetchService(`search-track/?q=${query}&offset=0&format=json`)
-    let response = search
+    let response = await fetchService(`search-track/?q=${query}&offset=0&format=json`)
     let result_url: object = { notFound: 'No samples found for this track' };
 
-    if(response.objects.length !== 0){
+    if(response.objects && response.objects.length !== 0){
         const trackID: boolean | string = checkResult(response.objects, artist, trackname);
 
         if (trackID) {
@@ -75,13 +68,10 @@ const checkResult = (data: Track[], artist: string, trackName: string): boolean 
  * @param trackID
  */
 const getSamples = async (trackID: string | object[]): Promise<object> => {
-    // let response = await fetchService(`track/${trackID}/?format=json`)
-    let response = track
-    let samples: Partial<SampleData[]> = [];
+    let response = await fetchService(`track/${trackID}/?format=json`)
 
-    if(track.sample_count > 0){
-        // let samples = await fetchService(`track-samples/?dest_track=${trackID}&format=json`)
-        let samples = samplesList
+    if(response.sample_count > 0){
+        let samples = await fetchService(`track-samples/?dest_track=${trackID}&format=json`)
         return {res: samples.objects}
     }
 

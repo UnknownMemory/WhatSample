@@ -1,0 +1,21 @@
+[{
+  "id": 1,
+  "priority": 1,
+  "action": {
+    "type": "modifyHeaders",
+    "requestHeaders": [{
+      "header": "User-Agent",
+      "operation": "set",
+      "value": "okhttp/4.9.3"
+    },
+    {
+      "header": "Cookie",
+      "operation": "set",
+      "value": "sessionid=\"\""
+    }
+    ]
+  },
+  "condition": {
+    "urlFilter": "*://*.whosampled.com/*"
+  }
+}]
