@@ -1,6 +1,6 @@
 'use strict';
 
-import { ServiceWorkerMessage } from './samplify'
+import {SampleData, ServiceWorkerMessage} from './whatsample'
 
 let artist: string = '';
 let trackname: string = '';
@@ -38,19 +38,20 @@ const setSample = (response: ServiceWorkerMessage['res']) => {
     e?.insertAdjacentHTML('beforeend', '<ul class="samples-list"></ul>');
 
     const list: HTMLElement | null = document.querySelector('.samples-list');
-    response!.forEach(sample => {
-        const html = `<li class="sample-details">
-                        <a class="sample-song" href=https://www.whosampled.com${sample.link} target="_blank">
+
+    if(Array.isArray(response)){
+        response!.forEach((sample: SampleData) => {
+            const html = `<li class="sample-details">
+                        <a class="sample-song" href=https://www.whosampled.com/sample/${sample.id} target="_blank">
                             <div class="sample-song-info">
-                                <div class="sample-song-title">${sample.artist} - ${sample.title}</div>
-                                <div class="sample-song-element">${sample.element}</div>
+                                <div class="sample-song-title">${sample.source_track.full_artist_name} - ${sample.source_track.track_name}</div>
                             </div>
                         </a>
                       </li>`;
 
-        list?.insertAdjacentHTML('afterbegin', html);
-    });
-
+            list?.insertAdjacentHTML('afterbegin', html);
+        });
+    }
     return;
 };
 

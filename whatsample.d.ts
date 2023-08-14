@@ -1,12 +1,13 @@
 export interface SampleData {
-    artist: string | null | undefined;
-    title: string | null | undefined;
-    element: string | null | undefined;
-    link: string | null | undefined;
+    id: string
+    source_track: {
+        full_artist_name: string | null | undefined;
+        track_name: string | null | undefined;
+    }
 }
 
 export interface ServiceWorkerMessage {
-    res?: SampleData[],
+    res?: string | SampleData[],
     notFound?: string,
 }
 
