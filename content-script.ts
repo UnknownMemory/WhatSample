@@ -25,7 +25,7 @@ const setButton = () => {
                         </div>
                       </div>`;
 
-        const extra: HTMLElement | null = document.querySelector('footer > div > div:nth-child(3) > div');
+        const extra: HTMLElement | null = document.querySelector('.mwpJrmCgLlVkJVtWjlI1');
         extra?.insertAdjacentHTML('afterbegin', html);
 
         return;
@@ -100,7 +100,7 @@ const textProcessing = (trackname: string): string => {
     const target: HTMLElement = document.body;
     const config: object = { childList: true, subtree: true };
     const observer: MutationObserver = new MutationObserver((mutations, observer) => {
-        if (document.querySelector('#main') && document.querySelector('.Root__now-playing-bar')) {
+        if (document.querySelector('#main') && document.querySelector('footer')) {
             setButton();
 
             const e: HTMLElement | null = document.querySelector('#sampled-track');

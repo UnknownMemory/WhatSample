@@ -1,3 +1,5 @@
+.idea
 .prettierrc
 node_modules
 build
+data.ts

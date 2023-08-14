@@ -1,5 +1,5 @@
 {
-    "name": "Samplify",
+    "name": "WhatSample",
     "manifest_version": 3,
     "permissions": ["background"],
     "host_permissions": ["*://*.whosampled.com/*", "*://open.spotify.com/*"],

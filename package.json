@@ -1,5 +1,5 @@
 {
-    "name": "samplify",
+    "name": "whatsample",
     "version": "0.1.4",
     "description": "Find the samples from a song on Spotify",
     "main": "background.ts",
