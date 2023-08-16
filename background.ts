@@ -26,7 +26,7 @@ const getSearchResult = async (query: string, artist: string, trackname: string)
     let response = await fetchService(`search-track/?q=${query}&offset=0&format=json`)
     let result_url: object = { notFound: 'No samples found for this track' };
 
-    if(response.objects && response.objects.length !== 0){
+    if(response.objects &&  response.objects.length !== 0){
         const trackID: boolean | string = checkResult(response.objects, artist, trackname);
 
         if (trackID) {
@@ -101,3 +101,30 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse): boolean =>
     }
     return true;
 });
+
+chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: [123],
+    addRules: [{
+        "id": 123,
+        "action": {
+            "type": chrome.declarativeNetRequest.RuleActionType.MODIFY_HEADERS,
+            "requestHeaders": [{
+                "header": "User-Agent",
+                "operation": chrome.declarativeNetRequest.HeaderOperation.SET,
+                "value": "okhttp/4.9.3"
+            },
+            {
+                "header": "Cookie",
+                "operation": chrome.declarativeNetRequest.HeaderOperation.SET,
+                "value": "sessionid=''"
+            },
+            ]
+        },
+        "condition": {
+            "urlFilter": "||www.whosampled.com/apimob/*",
+            //@ts-ignore
+            "resourceTypes": ["xmlhttprequest"]
+        }
+    }
+    ]
+})

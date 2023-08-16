@@ -1,7 +1,7 @@
 const webpack = require('webpack'),
-    path = require('path'),
-    {CleanWebpackPlugin} = require('clean-webpack-plugin'),
-    CopyWebpackPlugin = require('copy-webpack-plugin');
+path = require('path'),
+{CleanWebpackPlugin} = require('clean-webpack-plugin'),
+CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -49,7 +49,6 @@ module.exports = {
                     },
                 },
                 {from: './css', to: path.resolve(__dirname, 'build/css'), force: true},
-                {from: './rules.json', to: path.resolve(__dirname, 'build'), force: true},
                 {from: './icon_16.png', to: path.resolve(__dirname, 'build'), force: true},
                 {from: './icon_48.png', to: path.resolve(__dirname, 'build'), force: true},
                 {from: './icon_128.png', to: path.resolve(__dirname, 'build'), force: true},
