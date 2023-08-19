@@ -4,6 +4,7 @@ import {SampleData, ServiceWorkerMessage} from './whatsample'
 
 let artist: string = '';
 let trackname: string = '';
+let spotifyId: string = '';
 
 const setButton = () => {
     // Insert Samplify on the Spotify player
@@ -44,7 +45,7 @@ const setSample = (response: ServiceWorkerMessage['res']) => {
             const html = `<li class="sample-details">
                         <a class="sample-song" href=https://www.whosampled.com/sample/${sample.id} target="_blank">
                             <div class="sample-song-info">
-                                <div class="sample-song-title">${sample.source_track.full_artist_name} - ${sample.source_track.track_name}</div>
+                                <div class="sample-song-title standalone-ellipsis-one-line">${sample.source_track.full_artist_name} - ${sample.source_track.track_name}</div>
                             </div>
                         </a>
                       </li>`;
@@ -55,19 +56,25 @@ const setSample = (response: ServiceWorkerMessage['res']) => {
     return;
 };
 
+/**
+ * Display a message if no sample was found
+ * @param response
+ */
 const setError = (response: string) => {
-    // Display a message if no sample was found
     const e: HTMLElement | null = document.querySelector('#sample-list');
     e?.insertAdjacentHTML('beforeend', `<div class="samples-not-found">${response}</div>`);
     return;
 };
 
+/**
+ * Send the artist & track to the background script then pass the result to a callback function
+ */
 const getSample = () => {
-    // Send the artist & track to the background script then pass the result to a callback function
     const newArtist: string = document.querySelector('a[data-testid=context-item-info-artist]')?.textContent!;
     const newTrack: string = document.querySelector('a[data-testid=context-item-link]')?.textContent!;
+    const newSpotifyId: string = getSpotifyId(document.querySelector('a[data-testid=context-link]')?.getAttribute("href")!)
 
-    if (trackname != newTrack || artist != newArtist) {
+    if (trackname != newTrack || artist != newArtist || spotifyId != newSpotifyId) {
         const queryS: HTMLElement | null = document.querySelector('#sample-list > ul');
         const prevList: HTMLElement = queryS !== null ? queryS : document.querySelector('#sample-list > div')!;
 
@@ -77,17 +84,26 @@ const getSample = () => {
 
         artist = newArtist;
         trackname = textProcessing(newTrack);
-        chrome.runtime.sendMessage({ artist: artist, trackname: trackname }, (response: ServiceWorkerMessage) => {
+        spotifyId = newSpotifyId
+
+        chrome.runtime.sendMessage({ artist: artist, trackname: trackname, spotifyId: spotifyId }, (response: ServiceWorkerMessage) => {
             if (response.notFound) {
                 setError(response.notFound);
             } else {
                 setSample(response.res);
             }
         });
-
-        return;
     }
 };
+
+const getSpotifyId = (url: string) => {
+    const uri: string | null = new URLSearchParams(url).get('uri')
+    if(uri){
+        return uri.replace('spotify:track:', '')
+    }
+
+    return ''
+}
 
 const textProcessing = (trackname: string): string => {
     // filter the track

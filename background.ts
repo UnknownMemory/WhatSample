@@ -19,18 +19,17 @@ const fetchService = async (url: string) => {
 /**
  * Search the track on WhoSampled.com
  * @param query
- * @param artist
- * @param trackname
+ * @param spotifyId
  */
-const getSearchResult = async (query: string, artist: string, trackname: string): Promise<object> => {
+const getSearchResult = async (query: string, spotifyId: string): Promise<object> => {
     let response = await fetchService(`search-track/?q=${query}&offset=0&format=json`)
     let result_url: object = { notFound: 'No samples found for this track' };
 
-    if(response.objects &&  response.objects.length !== 0){
-        const trackID: boolean | string = checkResult(response.objects, artist, trackname);
+    if(!response.error && response.objects.length !== 0){
+        const trackId: boolean | string = checkSearchResult(response.objects, spotifyId);
 
-        if (trackID) {
-            result_url = { res: trackID };
+        if (trackId) {
+            result_url = { res: trackId };
         }
     }
 
@@ -40,27 +39,18 @@ const getSearchResult = async (query: string, artist: string, trackname: string)
 /**
  *
  * @param data
- * @param artist
- * @param trackName
+ * @param spotifyId
  */
-const checkResult = (data: Track[], artist: string, trackName: string): boolean | string => {
-    let trackID: boolean | number = false;
+const checkSearchResult = (data: Track[], spotifyId: string): boolean | string => {
+    let trackId: boolean | number = false;
 
-    data.some(e => {
-        const artistRegExp = new RegExp(escapeRegEx(artist).toLowerCase());
-        if (artistRegExp.test(e.full_artist_name.toLowerCase())) {
-            e.track_name = e.track_name.replace(/[',\s]/g, '');
-            trackName = trackName.replace(/[',\s]/g, '');
-
-            const tracknameRegExp = new RegExp(escapeRegEx(trackName).toLowerCase());
-            if (tracknameRegExp.test(e.track_name.toLowerCase())) {
-                trackID = e.id;
-                return true;
-            }
+    data.some(track => {
+        if (track.spotify_id == spotifyId) {
+            trackId = track.id;
         }
     });
 
-    return trackID;
+    return trackId;
 };
 
 /**
@@ -78,18 +68,14 @@ const getSamples = async (trackID: string | object[]): Promise<object> => {
     return { notFound: 'No samples found for this track' };
 };
 
-
-const escapeRegEx = (str: string): string => {
-    return str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&').replace(/-/g, '\\x2d');
-};
-
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse): boolean => {
-    // Search for samples and send the result to the content script
-    if (request.artist && request.trackname) {
+/**
+ * Search for samples and send the result to the content script
+ */
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.artist && request.trackname && request.spotifyId) {
         const query: string = request.artist.concat(' ', request.trackname);
 
-        getSearchResult(query, request.artist, request.trackname).then((data: ServiceWorkerMessage) => {
+        getSearchResult(query, request.spotifyId).then((data: ServiceWorkerMessage) => {
             if (data.res) {
                 getSamples(data.res).then(samples => {
                     sendResponse(samples);
@@ -99,7 +85,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse): boolean =>
             }
         })
     }
-    return true;
 });
 
 chrome.declarativeNetRequest.updateDynamicRules({
@@ -113,11 +98,11 @@ chrome.declarativeNetRequest.updateDynamicRules({
                 "operation": chrome.declarativeNetRequest.HeaderOperation.SET,
                 "value": "okhttp/4.9.3"
             },
-            {
-                "header": "Cookie",
-                "operation": chrome.declarativeNetRequest.HeaderOperation.SET,
-                "value": "sessionid=''"
-            },
+                {
+                    "header": "Cookie",
+                    "operation": chrome.declarativeNetRequest.HeaderOperation.SET,
+                    "value": "sessionid=''"
+                },
             ]
         },
         "condition": {
@@ -125,6 +110,6 @@ chrome.declarativeNetRequest.updateDynamicRules({
             //@ts-ignore
             "resourceTypes": ["xmlhttprequest"]
         }
-    }
+     }
     ]
-})
+}).then(r => {})
