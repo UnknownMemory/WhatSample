@@ -71,7 +71,7 @@ const getSamples = async (trackID: string | object[]): Promise<object> => {
         return {res: samples.objects}
     }
 
-    return { notFound: 'No samples found for this track' };
+    return { notFound: 'No sample was found for this track' };
 };
 
 /**
