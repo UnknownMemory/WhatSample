@@ -2,21 +2,17 @@
     position: relative;
     padding: 7px;
 }
-
 #sampled-track svg {
     display: block;
 }
-
 #sampled-track svg:hover {
     fill: #fff;
 }
-
 .is-visible {
     display: block !important;
     -webkit-animation: fadeIn 333ms cubic-bezier(0.3, 0, 0, 1);
     animation: fadeIn 333ms cubic-bezier(0.3, 0, 0, 1);
 }
-
 #sample-list {
     display: none;
     padding: 16px;
@@ -30,7 +26,6 @@
     box-shadow: 0 4px 12px 4px rgba(0, 0, 0, 0.5);
     z-index: 1002;
 }
-
 #sample-list:before {
     bottom: -20px;
     left: auto;
@@ -42,11 +37,9 @@
     position: absolute;
     content: '';
 }
-
 #sample-list h3 {
     font-size: 1.125rem;
 }
-
 #sample-list h3,
 .samples-not-found {
     display: block;
@@ -54,20 +47,16 @@
     padding: 14px;
     color: #fff;
 }
-
 .sample-details {
     border: none;
     border-radius: 4px;
 }
-
 .sample-details:hover {
     background-color: hsla(0,0%,100%,.1);
 }
-
 .sample-song:hover {
     text-decoration: none;
 }
-
 .sample-song-info {
     display: flex;
     flex-direction: column;
@@ -76,7 +65,6 @@
     align-items: center;
     height: 52px;
 }
-
 .sample-song-title,
 .samples-not-found {
     font-size: 0.9rem;
@@ -86,7 +74,6 @@
     letter-spacing: normal;
     text-transform: none;
 }
-
 .sample-song-element {
     font-size: 11px;
     font-weight: 400;

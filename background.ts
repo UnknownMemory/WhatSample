@@ -1,12 +1,16 @@
 'use strict';
 
-import {SampleData, ServiceWorkerMessage, Track} from './whatsample'
+import {ServiceWorkerMessage, Track} from './whatsample'
 
 const fetchService = async (url: string) => {
     const rootURL: string = "https://www.whosampled.com/apimob/v1/"
 
     const res = await fetch(rootURL+url, {
         method: 'GET',
+        headers: {
+            'cache': 'no-store',
+            'User-Agent': 'okhttp/4.9.3'
+        }
     })
 
     if(res.ok){
@@ -20,13 +24,15 @@ const fetchService = async (url: string) => {
  * Search the track on WhoSampled.com
  * @param query
  * @param spotifyId
+ * @param artist
+ * @param trackname
  */
-const getSearchResult = async (query: string, spotifyId: string): Promise<object> => {
+const getSearchResult = async (query: string, spotifyId: string, artist: string, trackname: string): Promise<object> => {
     let response = await fetchService(`search-track/?q=${query}&offset=0&format=json`)
     let result_url: object = { notFound: 'No samples found for this track' };
 
-    if(!response.error && response.objects.length !== 0){
-        const trackId: boolean | string = checkSearchResult(response.objects, spotifyId);
+    if(response.objects.length !== 0){
+        const trackId: boolean | string = checkSearchResult(response.objects, spotifyId, artist, trackname);
 
         if (trackId) {
             result_url = { res: trackId };
@@ -41,11 +47,11 @@ const getSearchResult = async (query: string, spotifyId: string): Promise<object
  * @param data
  * @param spotifyId
  */
-const checkSearchResult = (data: Track[], spotifyId: string): boolean | string => {
+const checkSearchResult = (data: Track[], spotifyId: string, artist: string, trackname: string): boolean | string => {
     let trackId: boolean | number = false;
 
     data.some(track => {
-        if (track.spotify_id == spotifyId) {
+        if (track.spotify_id == spotifyId || (track.full_artist_name.includes(artist) && track.track_name == trackname)) {
             trackId = track.id;
         }
     });
@@ -75,7 +81,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.artist && request.trackname && request.spotifyId) {
         const query: string = request.artist.concat(' ', request.trackname);
 
-        getSearchResult(query, request.spotifyId).then((data: ServiceWorkerMessage) => {
+        getSearchResult(query, request.spotifyId, request.artist, request.trackname).then((data: ServiceWorkerMessage) => {
             if (data.res) {
                 getSamples(data.res).then(samples => {
                     sendResponse(samples);
@@ -85,31 +91,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
         })
     }
+    return true;
 });
-
-chrome.declarativeNetRequest.updateDynamicRules({
-    removeRuleIds: [123],
-    addRules: [{
-        "id": 123,
-        "action": {
-            "type": chrome.declarativeNetRequest.RuleActionType.MODIFY_HEADERS,
-            "requestHeaders": [{
-                "header": "User-Agent",
-                "operation": chrome.declarativeNetRequest.HeaderOperation.SET,
-                "value": "okhttp/4.9.3"
-            },
-                {
-                    "header": "Cookie",
-                    "operation": chrome.declarativeNetRequest.HeaderOperation.SET,
-                    "value": "sessionid=''"
-                },
-            ]
-        },
-        "condition": {
-            "urlFilter": "||www.whosampled.com/apimob/*",
-            //@ts-ignore
-            "resourceTypes": ["xmlhttprequest"]
-        }
-     }
-    ]
-}).then(r => {})

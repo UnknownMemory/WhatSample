@@ -52,6 +52,7 @@ module.exports = {
                 {from: './icon_16.png', to: path.resolve(__dirname, 'build'), force: true},
                 {from: './icon_48.png', to: path.resolve(__dirname, 'build'), force: true},
                 {from: './icon_128.png', to: path.resolve(__dirname, 'build'), force: true},
+                {from: './rulesets.json', to: path.resolve(__dirname, 'build'), force: true},
             ],
         }),
     ],
