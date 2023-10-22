@@ -1,6 +1,6 @@
 #sampled-track {
     position: relative;
-    padding: 7px;
+    padding: 6.2px;
 }
 #sampled-track svg {
     display: block;
@@ -24,6 +24,7 @@
     border-radius: 5px;
     -webkit-box-shadow: 0 4px 12px 4px rgba(0, 0, 0, 0.5);
     box-shadow: 0 4px 12px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 8px;
     z-index: 1002;
 }
 #sample-list:before {
@@ -50,9 +51,13 @@
 .sample-details {
     border: none;
     border-radius: 4px;
+    pointer-events: none;
 }
 .sample-details:hover {
     background-color: hsla(0,0%,100%,.1);
+}
+.sample-song {
+    pointer-events: visible;
 }
 .sample-song:hover {
     text-decoration: none;
@@ -64,15 +69,16 @@
     justify-content: center;
     align-items: center;
     height: 52px;
+    overflow: hidden;
 }
 .sample-song-title,
 .samples-not-found {
     font-size: 0.9rem;
     font-weight: 400;
     line-height: 16px;
-    max-width: 95%;
     letter-spacing: normal;
     text-transform: none;
+    max-width: 90%;
 }
 .sample-song-element {
     font-size: 11px;

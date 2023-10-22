@@ -1,7 +1,7 @@
 {
     "name": "WhatSample",
     "manifest_version": 3,
-    "permissions": ["background", "declarativeNetRequestWithHostAccess", "declarativeNetRequest", "declarativeNetRequestFeedback"],
+    "permissions": ["background", "declarativeNetRequest"],
     "host_permissions": ["<all_urls>"],
     "background": {
         "service_worker": "./background.bundle.js"

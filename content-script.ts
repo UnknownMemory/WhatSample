@@ -40,10 +40,11 @@ const setSample = (response: ServiceWorkerMessage['res']) => {
 
     if(Array.isArray(response)){
         response!.forEach((sample: SampleData) => {
+            const fullTitle = `${sample.source_track.full_artist_name} - ${sample.source_track.track_name}`
             const html = `<li class="sample-details">
-                        <a class="sample-song" href=https://www.whosampled.com/sample/${sample.id} target="_blank">
+                        <a class="sample-song" href=https://www.whosampled.com/sample/${sample.id} target="_blank" title="${fullTitle}">
                             <div class="sample-song-info">
-                                <div class="sample-song-title standalone-ellipsis-one-line">${sample.source_track.full_artist_name} - ${sample.source_track.track_name}</div>
+                                <div class="sample-song-title standalone-ellipsis-one-line">${fullTitle}</div>
                             </div>
                         </a>
                       </li>`;
@@ -69,7 +70,7 @@ const setError = (response: string) => {
  */
 const getSample = () => {
     const newArtist: string = document.querySelector('a[data-testid=context-item-info-artist]')?.textContent!;
-    const newTrack: string = document.querySelector('a[data-testid=context-item-link]')?.textContent!;
+    const newTrack: string = textProcessing(document.querySelector('a[data-testid=context-item-link]')?.textContent!);
     const newSpotifyId: string = getSpotifyId(document.querySelector('a[data-testid=context-link]')?.getAttribute("href")!)
 
     if (trackname != newTrack || artist != newArtist || spotifyId != newSpotifyId) {
