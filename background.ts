@@ -15,9 +15,9 @@ const fetchService = async (url: string) => {
 
     if(res.ok){
         return res.json()
+    } else {
+        return {'error': 'An error occured during the request'}
     }
-
-    return {'error': 'An error occured during the request'}
 }
 
 /**

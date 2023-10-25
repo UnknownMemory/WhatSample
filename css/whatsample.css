@@ -78,6 +78,11 @@
     line-height: 16px;
     letter-spacing: normal;
     text-transform: none;
+}
+.samples-not-found {
+    max-width: 100%;
+}
+.sample-song-title {
     max-width: 90%;
 }
 .sample-song-element {
