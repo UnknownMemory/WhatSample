@@ -1,8 +1,8 @@
 {
-    "name": "Samplify",
+    "name": "WhatSample",
     "manifest_version": 3,
-    "permissions": ["background"],
-    "host_permissions": ["*://*.whosampled.com/*", "*://open.spotify.com/*"],
+    "permissions": ["background", "declarativeNetRequest"],
+    "host_permissions": ["<all_urls>"],
     "background": {
         "service_worker": "./background.bundle.js"
     },
@@ -11,9 +11,18 @@
             "run_at": "document_end",
             "matches": ["*://open.spotify.com/*"],
             "js": ["content_script.bundle.js"],
-            "css": ["css/samplify.css"]
+            "css": ["css/whatsample.css"]
         }
     ],
+    "declarative_net_request": {
+        "rule_resources": [
+            {
+                "id": "ruleset_whosampled",
+                "enabled": true,
+                "path": "./rulesets.json"
+            }
+        ]
+    },
     "icons": {
         "16": "icon_16.png",
         "48": "icon_48.png",

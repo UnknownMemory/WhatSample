@@ -1,0 +1,26 @@
+[
+  {
+    "id": 7852,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "User-Agent",
+          "operation": "set",
+          "value": "okhttp/4.9.3"
+        },
+        {
+          "header": "Cookie",
+          "operation": "set",
+          "value": "sessionid=''"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "|https://www.whosampled.com/apimob/*",
+      "isUrlFilterCaseSensitive": false,
+      "resourceTypes": ["xmlhttprequest", "main_frame"]
+    }
+  }
+]

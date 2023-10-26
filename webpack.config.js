@@ -1,7 +1,7 @@
 const webpack = require('webpack'),
-    path = require('path'),
-    {CleanWebpackPlugin} = require('clean-webpack-plugin'),
-    CopyWebpackPlugin = require('copy-webpack-plugin');
+path = require('path'),
+{CleanWebpackPlugin} = require('clean-webpack-plugin'),
+CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -12,6 +12,9 @@ module.exports = {
         path: path.resolve(__dirname, 'build'),
         publicPath: './',
         filename: '[name].bundle.js',
+    },
+    resolve: {
+        extensions: ['.ts', '.js'],
     },
     module: {
         rules: [
@@ -49,6 +52,7 @@ module.exports = {
                 {from: './icon_16.png', to: path.resolve(__dirname, 'build'), force: true},
                 {from: './icon_48.png', to: path.resolve(__dirname, 'build'), force: true},
                 {from: './icon_128.png', to: path.resolve(__dirname, 'build'), force: true},
+                {from: './rulesets.json', to: path.resolve(__dirname, 'build'), force: true},
             ],
         }),
     ],

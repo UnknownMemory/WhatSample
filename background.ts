@@ -1,105 +1,95 @@
 'use strict';
-const HTMLparser = require('node-html-parser');
-import { SampleData, ServiceWorkerMessage } from './samplify'
 
-interface Track {
-    artist_name: string;
-    counts: string;
-    id: number;
-    image_url: string;
-    track_name: string;
-    url: string;
+import {ServiceWorkerMessage, Track} from './whatsample'
+
+const fetchService = async (url: string) => {
+    const rootURL: string = "https://www.whosampled.com/apimob/v1/"
+
+    const res = await fetch(rootURL+url, {
+        method: 'GET',
+        headers: {
+            'cache': 'no-store',
+            'User-Agent': 'okhttp/4.9.3'
+        }
+    })
+
+    if(res.ok){
+        return res.json()
+    } else {
+        return {'error': 'An error occured during the request'}
+    }
 }
 
-const getSearchResult = async (url: string, artist: string, trackname: string): Promise<object> => {
-    // Search for samples on WhoSampled.com
-    let res = await fetch(url);
-    let data = await res.json();
+/**
+ * Search the track on WhoSampled.com
+ * @param query
+ * @param spotifyId
+ * @param artist
+ * @param trackname
+ */
+const getSearchResult = async (query: string, spotifyId: string, artist: string, trackname: string): Promise<object> => {
+    let response = await fetchService(`search-track/?q=${query}&offset=0&format=json`)
     let result_url: object = { notFound: 'No samples found for this track' };
 
-    if (Array.isArray(data.tracks) && data.tracks.length > 0) {
-        const track_url: boolean | string = checkResult(data.tracks, artist, trackname);
+    if(response.objects.length !== 0){
+        const trackId: boolean | string = checkSearchResult(response.objects, spotifyId, artist, trackname);
 
-        if (track_url) {
-            result_url = { res: track_url };
+        if (trackId) {
+            result_url = { res: trackId };
         }
     }
 
     return result_url;
 };
 
-const checkResult = (data: Track[], artist: string, trackname: string): boolean | string => {
-    let url: boolean | string = false;
+/**
+ *
+ * @param data
+ * @param spotifyId
+ */
+const checkSearchResult = (data: Track[], spotifyId: string, artist: string, trackname: string): boolean | string => {
+    let trackId: boolean | number = false;
 
-    data.some(e => {
-        const artistRegExp = new RegExp(escapeRegEx(artist).toLowerCase());
-        if (artistRegExp.test(e.artist_name.toLowerCase())) {
-            e.track_name = e.track_name.replace(/[',\s]/g, '');
-            trackname = trackname.replace(/[',\s]/g, '');
-
-            const tracknameRegExp = new RegExp(escapeRegEx(trackname).toLowerCase());
-            if (tracknameRegExp.test(e.track_name.toLowerCase())) {
-                url = e.url;
-                return true;
-            }
+    data.some(track => {
+        if (track.spotify_id == spotifyId || (track.full_artist_name.includes(artist) && track.track_name == trackname)) {
+            trackId = track.id;
         }
     });
 
-    return url;
+    return trackId;
 };
 
-const getSamples = async (url: string): Promise<object | SampleData> => {
-    // Get the list of samples
-    let res = await fetch(url);
-    let html = await res.text();
+/**
+ * Get the list of samples
+ * @param trackID
+ */
+const getSamples = async (trackID: string | object[]): Promise<object> => {
+    let response = await fetchService(`track/${trackID}/?format=json`)
 
-    let samples: Partial<SampleData[]> = [];
-    const doc = HTMLparser.parse(html);
-
-    const smplSection = doc.querySelector('#content > div > div.leftContent > section:nth-child(6)');
-
-    if (smplSection != null) {
-        const smplHeader = smplSection.querySelector('.section-header-title');
-
-        if (smplHeader !== null && smplHeader.textContent.includes('Contains samples')) {
-            const samplesList: HTMLElement[] = smplSection.querySelectorAll('.sampleEntry');
-            samplesList.forEach((sample: HTMLElement) => {
-                let sampleData: SampleData = {
-                    artist: sample.querySelector('.trackArtist a')?.textContent,
-                    title: sample.querySelector('.trackName.playIcon')?.textContent,
-                    element: sample.querySelector('.trackBadge .topItem')?.textContent,
-                    link: sample.querySelector('.trackName.playIcon')?.getAttribute('href'),
-                }
-                samples.push(sampleData);
-            });
-
-            return { res: samples };
-        }
+    if(response.sample_count > 0){
+        let samples = await fetchService(`track-samples/?dest_track=${trackID}&format=json`)
+        return {res: samples.objects}
     }
 
-    return { notFound: 'No samples found for this track' };
+    return { notFound: 'No sample was found for this track' };
 };
 
-
-const escapeRegEx = (str: string): string => {
-    return str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&').replace(/-/g, '\\x2d');
-};
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse): boolean => {
-    // Search for samples and send the result to the content script
-    if (request.artist && request.trackname) {
+/**
+ * Search for samples and send the result to the content script
+ */
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.artist && request.trackname && request.spotifyId) {
         const query: string = request.artist.concat(' ', request.trackname);
-        const url: string = `https://www.whosampled.com/ajax/search/?q=${encodeURI(query)}&_=`;
 
-        getSearchResult(url, request.artist, request.trackname).then((data: ServiceWorkerMessage) => {
+        getSearchResult(query, request.spotifyId, request.artist, request.trackname).then((data: ServiceWorkerMessage) => {
             if (data.res) {
-                getSamples(`https://www.whosampled.com${data.res}`).then(samples => {
+                getSamples(data.res).then(samples => {
                     sendResponse(samples);
                 });
             } else if (data.notFound) {
                 sendResponse(data);
             }
-        });
+        })
     }
     return true;
 });
